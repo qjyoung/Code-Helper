@@ -54,16 +54,15 @@ public class GenerateSetterCallsIntention implements IntentionAction {
     
     @Override
     public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-        CodeService codeService = CodeService.getInstance(project);
         PsiElement element = file.findElementAt(editor.getCaretModel().getOffset());
         
         final PsiExpression psiExpression = PsiTreeUtil.getParentOfType(element, PsiExpression.class);
         final PsiType type = psiExpression.getType();
-        if (type instanceof PsiClassReferenceType && !((PsiClassReferenceType) type).hasParameters()) {
+        if (type instanceof PsiClassReferenceType) {
             PsiClass clazz = ((PsiClassReferenceType) type).resolve();
             System.out.println(clazz);
             final PsiField[] fields = clazz.getAllFields();
-            codeService.addCode(file, editor, element, fields);
+            CodeService.getInstance(project).addCode(file, editor, element, fields);
         }
     }
 }

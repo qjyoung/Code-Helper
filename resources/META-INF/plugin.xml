@@ -14,21 +14,25 @@
     ]]>
     </change-notes>
     
-    <idea-version since-build="173.0"/>
+    <!--<idea-version since-build="173.0"/>-->
+    <idea-version since-build="131"/>
     
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.siyueren.codehelper.service.CodeService"/>
         <intentionAction>
             <className>com.siyueren.codehelper.intention.GenerateSetterCallsIntention</className>
         </intentionAction>
+        
+        <codeInsight.template.postfixTemplateProvider language="JAVA"
+                                                      implementationClass="com.siyueren.codehelper.intention.postfix.CodeHelperPostfixTemplateProvider"/>
     </extensions>
     
     <actions>
         <!-- Add your actions here -->
         <!--<action id="CodeHelper.MakeNotes" class="com.siyueren.codehelper.MakeNotes" text="Make Notes" description="Make notes for selection">-->
-            <!--<add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
-            <!--<keyboard-shortcut keymap="$default" first-keystroke="shift meta M"/>-->
-        <!--</action>-->
+        <!--<add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+        <!--<keyboard-shortcut keymap="$default" first-keystroke="shift meta M"/>-->
+        <!--</action>-->s
     </actions>
 
 </idea-plugin>
