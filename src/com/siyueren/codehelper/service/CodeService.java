@@ -30,20 +30,33 @@ public class CodeService {
         final Document myDocument = editor.getDocument();
         PsiElementFactory elementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-        final int textOffset = element.getTextOffset();
-        final String theVar = element.getText();
-        element.delete();
-        StringBuilder sb = new StringBuilder();
+        
         try {
+            int[] positions = new int[fields.length];
+            final String text = element.getText();
             for (int index = 0; index < fields.length; index++) {
                 PsiField code = fields[index];
                 final String name = code.getName();
-                String exp = theVar + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();\n";
+                String exp = text + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();";
                 System.out.println(exp);
-                sb.append(exp);
+                PsiStatement another = elementFactory.createStatementFromText(exp, element);
+                int lineBreakOffset;
+                if (index == 0) {
+                    element = element.replace(another);
+                     lineBreakOffset = element.getTextRange().getEndOffset();
+                } else {
+                    element.add(another);
+                    lineBreakOffset = another.getTextRange().getEndOffset();
+                }
+                positions[index] = lineBreakOffset;
             }
-            myDocument.insertString(textOffset, sb.toString());
+//            psiDocumentManager.doPostponedOperationsAndUnblockDocument(myDocument);
+            for (int position : positions) {
+                myDocument.insertString(position, LINE_SEPARATOR);
+                break;
+            }
             psiDocumentManager.doPostponedOperationsAndUnblockDocument(myDocument);
+//            psiDocumentManager.doPostponedOperationsAndUnblockDocument(myDocument);
         } catch (Exception e) {
             e.printStackTrace();
         }
