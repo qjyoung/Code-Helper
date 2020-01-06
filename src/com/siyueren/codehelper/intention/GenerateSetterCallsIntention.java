@@ -63,7 +63,7 @@ public class GenerateSetterCallsIntention implements IntentionAction {
             PsiClass clazz = ((PsiClassReferenceType) type).resolve();
             System.out.println(clazz);
             final PsiField[] fields = clazz.getAllFields();
-            codeService.addCode(editor, element, fields);
+            codeService.addCode(file, editor, element, fields);
         }
     }
 }
