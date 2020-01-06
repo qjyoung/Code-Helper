@@ -23,8 +23,6 @@
             <className>com.siyueren.codehelper.intention.GenerateSetterCallsIntention</className>
         </intentionAction>
         
-        <codeInsight.template.postfixTemplateProvider language="JAVA"
-                                                      implementationClass="com.siyueren.codehelper.intention.postfix.CodeHelperPostfixTemplateProvider"/>
     </extensions>
     
     <actions>
