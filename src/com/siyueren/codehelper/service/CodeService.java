@@ -30,29 +30,19 @@ public class CodeService {
         final Document myDocument = editor.getDocument();
         PsiElementFactory elementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-        
+        final int textOffset = element.getTextOffset();
+        final String theVar = element.getText();
+        element.delete();
+        StringBuilder sb = new StringBuilder();
         try {
-            int[] positions = new int[fields.length];
-            final String text = element.getText();
             for (int index = 0; index < fields.length; index++) {
                 PsiField code = fields[index];
                 final String name = code.getName();
-                String exp = text + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();";
+                String exp = theVar + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();\n";
                 System.out.println(exp);
-                PsiStatement another = elementFactory.createStatementFromText(exp, element);
-                if (index == 0) {
-                    element = element.getParent().replace(another);
-                    int lineBreakOffset = element.getTextOffset() + element.getTextLength();
-                    positions[index] = lineBreakOffset;
-                } else {
-                    element.add(another);
-                    int lineBreakOffset = another.getTextOffset() + another.getTextLength();
-                    positions[index] = lineBreakOffset;
-                }
+                sb.append(exp);
             }
-            for (int position : positions) {
-                myDocument.insertString(position, LINE_SEPARATOR);
-            }
+            myDocument.insertString(textOffset, sb.toString());
             psiDocumentManager.doPostponedOperationsAndUnblockDocument(myDocument);
         } catch (Exception e) {
             e.printStackTrace();
