@@ -1,0 +1,49 @@
+<idea-plugin>
+    <id>com.your.company.unique.plugin.id</id>
+    <name>Code Helper</name>
+    <version>1.0</version>
+    <vendor email="jianyongqiaoj@qq.com" url="http://blog.qjyoung.top">qjyoung</vendor>
+    
+    <description><![CDATA[
+      A simple code-helper plugin.<br>
+      A simple code-helper plugin.<br>
+      <a href="http://blog.qjyoung.top">查看我的博客</a>
+    ]]></description>
+    
+    <change-notes><![CDATA[
+      1.0.<br>
+      1st edition
+      1st edition
+      1st edition
+      1st edition
+      1st edition
+      1st edition
+      1st edition
+    ]]>
+    </change-notes>
+    
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="173.0"/>
+    
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+    
+    <extensions defaultExtensionNs="com.intellij">
+        <projectService serviceImplementation="com.siyueren.codehelper.service.CodeService"/>
+        <intentionAction>
+            <className>com.siyueren.codehelper.intention.GenerateSetterCallsIntention</className>
+        </intentionAction>
+    </extensions>
+    
+    <actions>
+        <!-- Add your actions here -->
+        <action id="CodeHelper.MakeNotes" class="com.siyueren.codehelper.MakeNotes" text="Make Notes" description="Make notes for selection">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="shift meta M"/>
+        </action>
+    </actions>
+
+</idea-plugin>
