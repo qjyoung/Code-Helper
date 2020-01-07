@@ -4,7 +4,10 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiField;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,36 +32,30 @@ public class CodeService {
     public void addCode(PsiFile file, Editor editor, @NotNull PsiElement element, PsiField[] fields) {
         final Document myDocument = editor.getDocument();
         CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(project);
-        PsiElementFactory elementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
         PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
         
-        final String lineIndent = codeStyleManager.getLineIndent(file, element.getTextOffset());
-        final int lineIndentLength = lineIndent.length();
+        final int elementOffset = element.getTextOffset();
+        final String lineIndent = codeStyleManager.getLineIndent(file, elementOffset);
+        
         try {
-            int lineBreakOffset = 0;
-            int[] positions = new int[fields.length];
+            StringBuilder sb = new StringBuilder();
             final String text = element.getText();
             for (int index = 0; index < fields.length; index++) {
                 PsiField code = fields[index];
                 final String name = code.getName();
-                String exp = text + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();";
-                System.out.println(exp);
-                PsiStatement another = elementFactory.createStatementFromText(exp, element.getParent());
+                String exp;
                 if (index == 0) {
-                    element = element.replace(another);
-                    lineBreakOffset = element.getTextRange().getEndOffset();
+                    exp = ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();";
                 } else {
-                    element.add(another);
-                    lineBreakOffset += another.getTextRange().getEndOffset();
+                    exp = text + ".set" + name.substring(0, 1).toUpperCase() + name.substring(1) + "();";
                 }
-                positions[index] = lineBreakOffset;
+                sb.append(exp);
+                if (index != fields.length - 1) {
+                    sb.append(LINE_SEPARATOR + lineIndent);
+                }
             }
+            myDocument.insertString(element.getTextRange().getEndOffset(), sb.toString());
             psiDocumentManager.doPostponedOperationsAndUnblockDocument(myDocument);
-            for (int line = 0; line < positions.length; ++line) {
-                int position = positions[line] + line * (1 + lineIndentLength);
-                myDocument.insertString(position, LINE_SEPARATOR + lineIndent);
-                PsiDocumentManager.getInstance(project).commitAllDocuments();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
