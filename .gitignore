@@ -4,6 +4,9 @@
 
 # IntelliJ project files
 .idea
+.gradle
+.sandbox
+build
 *.iml
 out
 gen

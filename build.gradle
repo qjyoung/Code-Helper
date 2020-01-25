@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.4.15"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.intellij' version '0.3.1'
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: "org.jetbrains.intellij"
+
+intellij {
+//    version = '2017.3'
+    version = 'IU-2018.1'
+    intellij.updateSinceUntilBuild false
+    sandboxDirectory = project.rootDir.canonicalPath + "/.sandbox"
+}
+
+group 'com.siyueren.codehelper'
+version '1.4'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+patchPluginXml {
+    changeNotes """
+    <h4>2020.01.08</h4>
+      <ul>
+        <li>version 1.3</li>
+        <li>fix bug</li>
+      </ul>
+    <h4>2020.01.16</h4>
+      <ul>
+        <li>version 1.4</li>
+        <li>update info</li>
+      </ul>
+     """
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
